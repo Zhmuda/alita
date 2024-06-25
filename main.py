@@ -8,7 +8,7 @@ from db import *
 import asyncio
 from aiogram.utils.exceptions import CantInitiateConversation, ChatNotFound, BotBlocked
 
-
+print(444)
 #bot = Bot(token="6390845058:AAGc80cZgBv6UbQI_AeD4utEg2GkjQon73I")
 bot = Bot(token="7037507472:AAFB_JU964RA79QUCiL_-1McLw8G6cIXbZg")  # test
 
