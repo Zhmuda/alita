@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  alita_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - db_data:/app/db
+    environment:
+      - ENV=test
+
+volumes:
+  db_data:
