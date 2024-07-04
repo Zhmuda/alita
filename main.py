@@ -8,7 +8,6 @@ from db import *
 import asyncio
 from aiogram.utils.exceptions import CantInitiateConversation, ChatNotFound, BotBlocked
 
-print(444)
 #bot = Bot(token="6390845058:AAGc80cZgBv6UbQI_AeD4utEg2GkjQon73I")
 bot = Bot(token="7037507472:AAFB_JU964RA79QUCiL_-1McLw8G6cIXbZg")  # test
 
@@ -408,7 +407,8 @@ async def support_group(message: types.Message, state: FSMContext):
     else:
         async with state.proxy() as data:
             reg_name = data['name']
-        await bot.send_message(-4029925124,
+            #-4029925124
+        await bot.send_message(-1002215835587,
                                f'Новая заявка на регистрацию!\nID:{message.from_user.id}\nNickname:@'
                                f'{message.from_user.username}\nИмя:{reg_name}\nОтдел:{message.text}')
         result = get_id()
@@ -963,6 +963,7 @@ async def support_group(message: types.Message, state: FSMContext):
 
 async def on_startup(_):
     ids = get_id()
+    users_ids = get_user_id()
     users_ids = get_user_id()
     users_ids += ids
     users_ids = set(users_ids)
