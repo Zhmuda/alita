@@ -16,6 +16,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+     - name: Install SSH keys
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          ssh-keyscan -H example.com > ~/.ssh/known_hosts  # Замените example.com на ваш домен или IP
+
+      - name: Copy Docker Compose file to server
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            scp -i ~/.ssh/id_rsa docker-compose.prod.yml user@example.com:/path/to/production/docker-compose.yml
+          elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
+            scp -i ~/.ssh/id_rsa docker-compose.test.yml user@example.com:/path/to/test/docker-compose.yml
+          fi
+
+    ===============================================================================================================
+
       - name: Install SSH keys
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
@@ -28,6 +44,22 @@ jobs:
             scp -i ~/.ssh/id_rsa docker-compose.prod.yml ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/docker-compose.yml
           elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
             scp -i ~/.ssh/id_rsa docker-compose.test.yml ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/docker-compose.yml
+          fi
+
+      - name: Copy environment file to server
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            scp -i ~/.ssh/id_rsa prod_db/.env ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/prod_db/.env
+          elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
+            scp -i ~/.ssh/id_rsa test_db/.env ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/test_db/.env
+          fi
+
+      - name: Copy database to server
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            scp -i ~/.ssh/id_rsa prod_db/messages.db ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/prod_db/messages.db
+          elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
+            scp -i ~/.ssh/id_rsa test_db/messages.db ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/test_db/messages.db
           fi
 
       - name: Deploy Docker Compose on server
