@@ -25,13 +25,17 @@
     ```
 
 ## Запуск проекта локально
+1. Установка необходимых зависимостей
+   ```sh
+    RUN pip install --user --no-cache-dir -r requirements.txt
+    ```
 
-1. Постройте и запустите контейнеры с помощью Docker Compose:
+2. Постройте и запустите контейнеры с помощью Docker Compose:
     ```sh
     docker-compose -f docker-compose.prod.yml up -d --build
     ```
 
-2. Остановите контейнеры:
+3. Остановите контейнеры:
     ```sh
     docker-compose -f docker-compose.prod.yml down
     ```
