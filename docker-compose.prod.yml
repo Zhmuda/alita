@@ -1,14 +1,17 @@
 version: '3.8'
 
 services:
-  alita_service:
+  alita_service_prod:
+    container_name: alita_service_prod
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8001:8000" # Используем другой порт для прод
     volumes:
-      - .:/app
+      - db_data_prod:/app/db
     environment:
       - ENV=production
 
+volumes:
+  db_data_prod:
