@@ -9,7 +9,7 @@
 - `main.py`: основной файл проекта.
 - `Dockerfile`: файл конфигурации для сборки Docker-образа.
 - `docker-compose.prod.yml` и `docker-compose.test.yml`: файлы конфигурации Docker Compose для продакшн и тестового окружений.
-- `.github/workflows/docker-deploy.yml`: файл конфигурации GitHub Actions для автоматической сборки и деплоя проекта.
+- `.github/workflows/deploy.yml`: файл конфигурации GitHub Actions для автоматической сборки и деплоя проекта.
 
 ## Требования
 
@@ -25,20 +25,24 @@
     ```
 
 ## Запуск проекта локально
+1. Установка необходимых зависимостей
+   ```sh
+    RUN pip install --user --no-cache-dir -r requirements.txt
+    ```
 
-1. Постройте и запустите контейнеры с помощью Docker Compose:
+2. Постройте и запустите контейнеры с помощью Docker Compose:
     ```sh
     docker-compose -f docker-compose.prod.yml up -d --build
     ```
 
-2. Остановите контейнеры:
+3. Остановите контейнеры:
     ```sh
     docker-compose -f docker-compose.prod.yml down
     ```
 
 ## Автоматическое развертывание с помощью GitHub Actions
 
-1. В файле `.github/workflows/docker-deploy.yml` настроены шаги для автоматической сборки и деплоя проекта.
+1. В файле `.github/workflows/deploy.yml` настроены шаги для автоматической сборки и деплоя проекта.
 2. Добавьте секреты в настройки репозитория на GitHub (`Settings > Secrets and variables > Actions`):
     - `SERVER_HOST`
     - `SERVER_USER`
