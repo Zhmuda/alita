@@ -36,35 +36,23 @@ jobs:
         run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+          ssh-keyscan -H example.com > ~/.ssh/known_hosts  # Замените example.com на ваш домен или IP
 
       - name: Copy Docker Compose file to server
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            scp -i ~/.ssh/id_rsa docker-compose.prod.yml ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/docker-compose.yml
+            scp -i ~/.ssh/id_rsa docker-compose.prod.yml user@example.com:/path/to/production/docker-compose.yml
           elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
-            scp -i ~/.ssh/id_rsa docker-compose.test.yml ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/docker-compose.yml
-          fi
-
-      - name: Copy environment file to server
-        run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            scp -i ~/.ssh/id_rsa prod_db/.env ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/prod_db/.env
-          elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
-            scp -i ~/.ssh/id_rsa test_db/.env ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/test_db/.env
-          fi
-
-      - name: Copy database to server
-        run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            scp -i ~/.ssh/id_rsa prod_db/messages.db ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/prod_db/messages.db
-          elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
-            scp -i ~/.ssh/id_rsa test_db/messages.db ${{ secrets.SSH_HOST }}:${{ secrets.WORK_DIR }}/test_db/messages.db
+            scp -i ~/.ssh/id_rsa docker-compose.test.yml user@example.com:/path/to/test/docker-compose.yml
           fi
 
       - name: Deploy Docker Compose on server
         run: |
-          ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker-compose down && docker-compose up -d --build"
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            ssh -i ~/.ssh/id_rsa user@example.com "cd /path/to/production && docker-compose down && docker-compose up -d --build"
+          elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
+            ssh -i ~/.ssh/id_rsa user@example.com "cd /path/to/test && docker-compose down && docker-compose up -d --build"
+          fi
 
       - name: Cleanup
         run: rm -rf ~/.ssh
