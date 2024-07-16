@@ -44,10 +44,7 @@
 
 1. В файле `.github/workflows/deploy.yml` настроены шаги для автоматической сборки и деплоя проекта.
 2. Добавьте секреты в настройки репозитория на GitHub (`Settings > Secrets and variables > Actions`):
-    - `SERVER_HOST`
-    - `SERVER_USER`
-    - `SERVER_SSH_KEY`
-    - `SERVER_PORT`
+    - `SERVER_PRIVATE_KEY`
 
 3. Каждый раз при пуше в ветку `main` GitHub Actions автоматически выполнит сборку и деплой проекта на указанный сервер.
 
